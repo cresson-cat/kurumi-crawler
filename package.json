@@ -1,0 +1,51 @@
+{
+  "name": "kurumi-crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "▽▽▽ vscodeでデバッグする場合'npm run build'してからデバッグ ▽▽▽": "",
+    "build": "npm run clean & tsc",
+    "▽▽▽ node ./src/index.js.. のように実行できるようにする ▽▽▽": "",
+    "dev": "npm run clean & ts-node ./src/index.ts",
+    "▽▽▽ ソースの変更を検知したら随時実行する。メンテナンス要 ▽▽▽": "",
+    "---dev:watch---": "npm run clean & ts-node-dev --respawn src/index.ts",
+    "dev:watch": "tsc src/index.ts -w",
+    "▽▽▽ rm -rf.. と同様 ▽▽▽": "",
+    "clean": "rimraf dist/*",
+    "start": "node dist/index.js",
+    "lint": "eslint 'src/**/*.js' --fix",
+    "format": "prettier-eslint 'src/*.{js,json}' --write",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/D-A-I/kurumi-crawler.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/D-A-I/kurumi-crawler/issues"
+  },
+  "homepage": "https://github.com/D-A-I/kurumi-crawler#readme",
+  "dependencies": {
+    "typescript": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.8",
+    "@typescript-eslint/eslint-plugin": "^1.3.0",
+    "@typescript-eslint/parser": "^1.3.0",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^5.0.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "jest": "^24.8.0",
+    "moment": "^2.24.0",
+    "prettier": "^1.16.4",
+    "rimraf": "^2.6.3",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.3.0",
+    "ts-node-dev": "^1.0.0-pre.40"
+  }
+}
