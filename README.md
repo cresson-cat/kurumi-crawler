@@ -4,7 +4,7 @@
 
 1. `selenium`でcsvダウンロード
 2. csvを加工してjson作成
-3. httpクライアント経由でjsonをpost
+3. httpクライアントでjsonをpost
 
 ## メモ
 

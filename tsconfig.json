@@ -14,7 +14,7 @@
     "esModuleInterop": true
   },
   "include": [
-    "src/**/*",
+    "src/**/*"
     //"__tests__", // コメントを外すとテストコード内でjestが参照できなくなる
   ]
 }

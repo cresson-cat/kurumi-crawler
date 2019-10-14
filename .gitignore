@@ -66,3 +66,6 @@ dist/
 # 設定ファイルは不要
 init.json
 init.yaml
+
+# selenium-webdriver
+chromedriver
