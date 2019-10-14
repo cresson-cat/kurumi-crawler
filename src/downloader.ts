@@ -113,7 +113,7 @@ export default async function getCsv(user: AccountInfo): Promise<string> {
     writeLog('　画面遷移中.. 個人用のトップ画面 >> 入出金明細画面');
     await transFromIndivToDetails(driver);
 
-    // `最近10日` > `照会` > （必要に応じて下にスライド） > `明細をダウンロード`
+    // CSVダウンロード
     writeLog('　CSVをダウンロード中..');
     await downloadCsv(driver);
 
@@ -123,7 +123,7 @@ export default async function getCsv(user: AccountInfo): Promise<string> {
     // ログアウト
     await logout(driver);
 
-    return '';
+    return 'test.. ';
   } catch (err) {
     // ログに残す
     console.log(err);
