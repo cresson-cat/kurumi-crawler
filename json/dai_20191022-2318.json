@@ -1,0 +1,198 @@
+[
+  {
+    "name": "dai",
+    "date": 20191014,
+    "branch": 0,
+    "money": 5,
+    "description": "デビット１　ＶＩＳＡ－９８００１９："
+  },
+  {
+    "name": "dai",
+    "date": 20191015,
+    "branch": 1,
+    "money": 2,
+    "description": "口座振替３　トミンキヨウサイ："
+  },
+  {
+    "name": "dai",
+    "date": 20191015,
+    "branch": 2,
+    "money": 136,
+    "description": "デビット１　ＶＩＳＡ－１８６４８８："
+  },
+  {
+    "name": "dai",
+    "date": 20191015,
+    "branch": 3,
+    "money": 1,
+    "description": "デビット１　ＶＩＳＡ－２１１９３６："
+  },
+  {
+    "name": "dai",
+    "date": 20191016,
+    "branch": 4,
+    "money": 2,
+    "description": "デビット３："
+  },
+  {
+    "name": "dai",
+    "date": 20191016,
+    "branch": 5,
+    "money": 1,
+    "description": "デビット１　ＶＩＳＡ－２７５９３２："
+  },
+  {
+    "name": "dai",
+    "date": 20191016,
+    "branch": 6,
+    "money": 136,
+    "description": "デビット１　ＶＩＳＡ－４１２７４１："
+  },
+  {
+    "name": "dai",
+    "date": 20191016,
+    "branch": 7,
+    "money": 2,
+    "description": "デビット１　ＶＩＳＡ－４５３３６８："
+  },
+  {
+    "name": "dai",
+    "date": 20191016,
+    "branch": 8,
+    "money": 150,
+    "description": "デビット１　ＶＩＳＡ－４６０５９５："
+  },
+  {
+    "name": "dai",
+    "date": 20191017,
+    "branch": 9,
+    "money": 770,
+    "description": "デビット１　ＶＩＳＡ－６２７１１１："
+  },
+  {
+    "name": "dai",
+    "date": 20191017,
+    "branch": 10,
+    "money": 718,
+    "description": "デビット１　ＶＩＳＡ－６８９０４０："
+  },
+  {
+    "name": "dai",
+    "date": 20191018,
+    "branch": 11,
+    "money": 1,
+    "description": "デビット１　ＶＩＳＡ－７２６５９２："
+  },
+  {
+    "name": "dai",
+    "date": 20191018,
+    "branch": 12,
+    "money": null,
+    "description": "振込１　カネガダイ："
+  },
+  {
+    "name": "dai",
+    "date": 20191018,
+    "branch": 13,
+    "money": 315,
+    "description": "デビット１　ＶＩＳＡ－８５３７７５："
+  },
+  {
+    "name": "dai",
+    "date": 20191018,
+    "branch": 14,
+    "money": 1,
+    "description": "デビット１　ＶＩＳＡ－９０７１９４："
+  },
+  {
+    "name": "dai",
+    "date": 20191019,
+    "branch": 15,
+    "money": 605,
+    "description": "デビット１　ＶＩＳＡ－９７８１９３："
+  },
+  {
+    "name": "dai",
+    "date": 20191019,
+    "branch": 16,
+    "money": 1,
+    "description": "デビット１　ＶＩＳＡ－９８１２５９："
+  },
+  {
+    "name": "dai",
+    "date": 20191019,
+    "branch": 17,
+    "money": 2,
+    "description": "デビット１　ＶＩＳＡ－１５１７４３："
+  },
+  {
+    "name": "dai",
+    "date": 20191020,
+    "branch": 18,
+    "money": 6,
+    "description": "デビット１　ＶＩＳＡ－３１６３８８："
+  },
+  {
+    "name": "dai",
+    "date": 20191020,
+    "branch": 19,
+    "money": 471,
+    "description": "デビット１　ＶＩＳＡ－３２１０１８："
+  },
+  {
+    "name": "dai",
+    "date": 20191020,
+    "branch": 20,
+    "money": 930,
+    "description": "デビット１　ＶＩＳＡ－３３８８６３："
+  },
+  {
+    "name": "dai",
+    "date": 20191021,
+    "branch": 21,
+    "money": 3,
+    "description": "口座振替３　セイキヨウユ－コ－プ："
+  },
+  {
+    "name": "dai",
+    "date": 20191021,
+    "branch": 22,
+    "money": 293,
+    "description": "デビット１　ＶＩＳＡ－５２１０９６："
+  },
+  {
+    "name": "dai",
+    "date": 20191021,
+    "branch": 23,
+    "money": 248,
+    "description": "デビット１　ＶＩＳＡ－５７８４５６："
+  },
+  {
+    "name": "dai",
+    "date": 20191021,
+    "branch": 24,
+    "money": 655,
+    "description": "デビット１　ＶＩＳＡ－５８０３７９："
+  },
+  {
+    "name": "dai",
+    "date": 20191022,
+    "branch": 25,
+    "money": 335,
+    "description": "デビット１　ＶＩＳＡ－６５２８３６："
+  },
+  {
+    "name": "dai",
+    "date": 20191022,
+    "branch": 26,
+    "money": 1,
+    "description": "デビット１　ＶＩＳＡ－７４４３２５："
+  },
+  {
+    "name": "dai",
+    "date": 20191022,
+    "branch": 27,
+    "money": 3,
+    "description": "デビット１　ＶＩＳＡ－７４５６０９："
+  }
+]

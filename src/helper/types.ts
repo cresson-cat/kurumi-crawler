@@ -18,3 +18,14 @@ export interface AccountInfo {
 export interface InitialData {
   users: AccountInfo[];
 }
+
+/**
+ * Apiに渡す型。出金明細
+ */
+export interface WithdrawalInfo {
+  name: string;
+  date: number;
+  branch: number;
+  money: number;
+  description?: string;
+}

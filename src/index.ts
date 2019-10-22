@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import fs from 'fs';
-import { Logger, InitialData } from './helper/types'; // 型情報
+import { Logger, AccountInfo, InitialData } from './helper/types'; // 型情報
 import download from './downloader'; // csvダウンロード
 
 // 自作の簡易ログ（js）
@@ -29,12 +29,11 @@ writeLog('メイン処理を開始します');
 const conf: InitialData = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
 
 (async (): Promise<void> => {
-  await download(conf.users[0]);
-  // conf.users.map にて、Promise(xN) を返す
-  // downloaderをコールする
-  // csvを取得する
-  // csvからjsonに変換する
-  // client にてjsonをPOSTする
-
-  writeLog('メイン処理が完了しました');
+  // 出金明細のjsonのパスを取得する
+  const files = conf.users.map(
+    async (x: AccountInfo): Promise<string> => download(x)
+  );
+  const result = await Promise.all(files);
+  // +++ テスト中 +++
+  writeLog('メイン処理が完了しました >> ' + result);
 })();
