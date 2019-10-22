@@ -14,7 +14,7 @@ import { Logger, AccountInfo, WithdrawalInfo } from './helper/types';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const writeLog: Logger = require('./helper/logger');
 
-//#region chromeの設定.. 頑張っても効かなかったので、コメントアウト
+//#region chromeの設定.. 頑張っても効かなかったんで、コメントアウト
 /*
 const capabilities = {
   browserName: 'chrome',
@@ -26,12 +26,6 @@ const capabilities = {
 };
 */
 //#endregion
-
-/**
- * ## Seleniumのセレクタの優先順位 ##
- * id > name > css selector
- * ※ あとで見直す..
- */
 
 /**
  * USJのトップ画面からログイン画面へ遷移
@@ -86,7 +80,7 @@ const getJson = async (_driver: WebDriver): Promise<string> => {
     .click();
   // htmlを返す
   return _driver.getPageSource();
-  //#region CSVダウンロード。ダウンロード先を制御出来なかったのでコメント化
+  //#region CSVダウンロード。ダウンロード先を制御出来なかったんでコメント化
   /*
   await _driver
     .findElement(

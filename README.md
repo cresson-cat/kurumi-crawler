@@ -2,12 +2,11 @@
 
 ## 予定
 
-1. `selenium`でcsvダウンロード
-2. csvを加工してjson作成
-3. httpクライアントでjsonをpost
+1. httpクライアントでjsonをpost（一旦`json-server`へ）
+1. `Ramda`で処理を改善する
 
 ## メモ
 
 1. init.json -> init.yaml
-2. テストコードを追加
-3. webpackでバンドルする
+1. テストコードを追加
+1. webpackでバンドルする（気が向いたら）
