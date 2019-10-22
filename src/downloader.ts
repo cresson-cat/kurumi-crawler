@@ -161,19 +161,27 @@ const parseWithdrawal = (html: string, user: AccountInfo): WithdrawalInfo[] => {
         );
       } else if (td.className.includes('manage') && isWithdrawals) {
         // -- 支払い金額 --
-        line.money = parseInt(_removeStr(_getProp(td, rIdx), [',', '円']));
+        const _money = _removeStr(_getProp(td, rIdx), [',', '円']).trim();
+        if (!_money) continue;
+        // 支払い金が取得できた場合
+        line.money = parseInt(_money);
         isWithdrawals = false;
       } else if (
         td.className.includes('transaction') ||
         td.className.includes('note')
       ) {
         // -- 取引内容／メモ --
-        line.description +=
-          !line || !line.description
-            ? _getProp(td, rIdx, true)
-            : `：${_getProp(td, rIdx, true).trim()}`;
+        const _prop = _getProp(td, rIdx, true).trim();
+        if (!line.description && _prop) {
+          // 取引内容
+          line.description = _prop;
+        } else if (line.description && _prop) {
+          // メモ
+          line.description += `：${_prop}`;
+        }
       }
     }
+    // 一行追加
     result.push(line);
   }
   // 結果返却
