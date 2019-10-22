@@ -63,6 +63,9 @@ typings/
 # コンパイル後のファイルは不要
 dist/
 
+# 中間ファイルは不要
+json/
+
 # 設定ファイルは不要
 init.json
 init.yaml
