@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import fs from 'fs';
-import { Logger, AccountInfo, InitialData } from './helper/types'; // 型情報
+import { AccountInfo, InitialData } from './helper/types'; // 型情報
 import download from './downloader'; // csvダウンロード
 
-// 自作の簡易ログ（js）
-const writeLog: Logger = require('./helper/logger');
+// コンソール及び、ログを残す
+import leaveLog from './helper/trailer';
 
 // Promiseのエラーがcatchされなかった場合
 process.on('unhandledRejection', (reason: unknown): void => {
   if (typeof reason === 'string') {
-    writeLog(`${reason}`); // ログに残しておく
+    leaveLog(`${reason}`); // ログに残しておく
     console.log(`${reason}`);
   }
 });
@@ -22,8 +22,8 @@ process.on('uncaughtException', (err: Error): void => {
 });
 
 /* メイン処理開始 */
-writeLog('----------');
-writeLog('メイン処理を開始します');
+leaveLog('----------');
+leaveLog('メイン処理を開始します');
 
 // init.jsonを読み込む
 const conf: InitialData = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
@@ -35,5 +35,5 @@ const conf: InitialData = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
   );
   const result = await Promise.all(files);
   // +++ テスト中 +++
-  writeLog('メイン処理が完了しました >> ' + result);
+  leaveLog('メイン処理が完了しました >> ' + result);
 })();

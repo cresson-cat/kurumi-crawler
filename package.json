@@ -4,18 +4,13 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "▽▽▽ vscodeでデバッグする場合'npm run build'してからデバッグ ▽▽▽": "",
+    "▽▽▽ ビルド ▽▽▽": "",
     "build": "npm run clean & tsc",
-    "▽▽▽ node ./src/index.js.. のように実行できるようにする ▽▽▽": "",
-    "dev": "npm run clean & ts-node ./src/index.ts",
-    "▽▽▽ ソースの変更を検知したら随時実行する。メンテナンス要 ▽▽▽": "",
-    "---dev:watch---": "npm run clean & ts-node-dev --respawn src/index.ts",
-    "dev:watch": "tsc src/index.ts -w",
+    "▽▽▽ ソースの変更を検知したら、随時ビルド ▽▽▽": "",
+    "watch": "npm run clean & tsc -w",
     "▽▽▽ rm -rf.. と同様 ▽▽▽": "",
     "clean": "rimraf dist/*",
-    "start": "node dist/index.js",
-    "lint": "eslint 'src/**/*.js' --fix",
-    "format": "prettier-eslint 'src/*.{js,json}' --write",
+    "▽▽▽ Jest ▽▽▽": "",
     "test": "jest"
   },
   "repository": {

@@ -1,20 +1,27 @@
-// ライブラリ群
-import { Builder, By, WebDriver } from 'selenium-webdriver'; // webdriver
-import { JSDOM } from 'jsdom';
+// 標準モジュール
 import fs from 'fs';
-import moment from 'moment';
 import { promisify } from 'util';
 
-// Promise化
-const writeFile = promisify(fs.writeFile);
+// npmパッケージ
+import {
+  Builder,
+  By,
+  WebDriver /* , Capabilities */,
+} from 'selenium-webdriver';
+import { JSDOM } from 'jsdom';
+import moment from 'moment';
 
 // 型情報
-import { Logger, AccountInfo, WithdrawalInfo } from './helper/types';
+import { AccountInfo, WithdrawalInfo } from './helper/types';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const writeLog: Logger = require('./helper/logger');
+// コンソール及び、ログを残す
+import leaveLog from './helper/trailer';
 
-//#region chromeの設定.. 頑張っても効かなかったんで、コメントアウト
+// 標準モジュールをPromise化しとく
+const writeFile = promisify(fs.writeFile);
+
+//#region chromeの設定
+// 試行錯誤その１
 /*
 const capabilities = {
   browserName: 'chrome',
@@ -25,71 +32,80 @@ const capabilities = {
   },
 };
 */
+
+// 試行錯誤その２
+/*
+const capabilities = Capabilities.chrome();
+capabilities.set('chromeOptions', {
+  args: ['--headless'],
+});
+*/
 //#endregion
 
 /**
  * USJのトップ画面からログイン画面へ遷移
- * @param _driver WebDriver
+ * @param driver WebDriver
  */
-const transFromTopToLogin = async (_driver: WebDriver): Promise<void> => {
+const transFromTopToLogin = async (driver: WebDriver): Promise<void> => {
   // トップ画面
-  await _driver.get('https://direct.bk.mufg.jp/');
-  await _driver.findElement(By.id('lnav_direct_login')).click();
+  await driver.get('https://direct.bk.mufg.jp/');
+  await driver.findElement(By.id('lnav_direct_login')).click();
   // ログイン画面（新規タブ）に切り替え
-  const handles = await _driver.getAllWindowHandles();
-  await _driver.switchTo().window(handles[handles.length - 1]);
+  const handles = await driver.getAllWindowHandles();
+  await driver.switchTo().window(handles[handles.length - 1]);
 };
 
 /**
  * ログイン画面から個人のトップ画面へ遷移
- * @param _driver WebDriver
+ * @param driver WebDriver
+ * @param user アカウント情報
  */
 const transFromLoginToIndiv = async (
-  _driver: WebDriver,
-  _user: AccountInfo
+  driver: WebDriver,
+  user: AccountInfo
 ): Promise<void> => {
-  await _driver.findElement(By.id('account_id')).sendKeys(_user.account);
-  await _driver.findElement(By.id('ib_password')).sendKeys(_user.password);
+  await driver.findElement(By.id('account_id')).sendKeys(user.account);
+  await driver.findElement(By.id('ib_password')).sendKeys(user.password);
   // ログインボタン押下
-  await _driver
+  await driver
     .findElement(By.css('#login_frame > div > div > div.acenter.admb_m > a'))
     .click();
 };
 
 /**
  * 個人のトップ画面から入出金明細へ遷移
- * @param _driver WebDriver
+ * @param driver WebDriver
  */
-const transFromIndivToDetails = async (_driver: WebDriver): Promise<void> => {
-  await _driver.findElement(By.css('#list > li:nth-child(2) > a')).click();
+const transFromIndivToDetails = async (driver: WebDriver): Promise<void> => {
+  await driver.findElement(By.css('#list > li:nth-child(2) > a')).click();
 };
 
 /**
  * 入出金明細にてJson取得
- * @param _driver WebDriver
- * @param parse htmlのparse関数
+ * @param driver WebDriver
  */
-const getJson = async (_driver: WebDriver): Promise<string> => {
+const getHtml = async (driver: WebDriver): Promise<string> => {
   // 直近10日
-  await _driver.findElement(By.id('day_ten')).click();
+  await driver.findElement(By.id('day_ten')).click();
   // 照会
-  await _driver
+  await driver
     .findElement(
       By.css('#search > div > div > div.item.last_item > div > button')
     )
     .click();
+
   // htmlを返す
-  return _driver.getPageSource();
-  //#region CSVダウンロード。ダウンロード先を制御出来なかったんでコメント化
+  return driver.getPageSource();
+  //#region CSVダウンロード。ダウンロード先を制御出来なかったのでコメント化
   /*
-  await _driver
+  await driver
     .findElement(
       By.css(
         '#contents > div.yen_6_2_1 > div:nth-child(2) > div.data_footer > table > tbody > tr > td.first_child > a'
       )
     )
     .click();
-  await _driver
+  await driver
     .findElement(By.css('#contents > div.buttons > div.admb_l > button'))
     .click();
   */
@@ -97,14 +113,18 @@ const getJson = async (_driver: WebDriver): Promise<string> => {
 };
 
 /**
- * 入出金明細のtableをparseして返す
- * @param html
+ * 入出金明細のtableをparseし、jsonを返す
+ * @param html 分析対象のhtml
+ * @param user アカウント情報
  */
-const parseWithdrawal = (html: string, user: AccountInfo): WithdrawalInfo[] => {
+const getJson = (html: string, user: AccountInfo): WithdrawalInfo[] => {
   let result: WithdrawalInfo[] = [];
   const dom = new JSDOM(html);
+
+  /* +++ 小関数群 +++ */
+
   // tdのテキストを取得
-  const _getProp = (
+  const _getText = (
     _cell: HTMLTableDataCellElement,
     rIdx: number,
     isNullable = false
@@ -151,21 +171,21 @@ const parseWithdrawal = (html: string, user: AccountInfo): WithdrawalInfo[] => {
       if (td.className.includes('date')) {
         // -- 日付 --
         line.date = parseInt(
-          _removeStr(_getProp(td, rIdx), ['年', '月', '日'])
+          _removeStr(_getText(td, rIdx), ['年', '月', '日'])
         );
       } else if (td.className.includes('manage') && isWithdrawals) {
         // -- 支払い金額 --
-        const _money = _removeStr(_getProp(td, rIdx), [',', '円']).trim();
-        if (!_money) continue;
+        isWithdrawals = false; // フラグを落とす
+        const _prop = _removeStr(_getText(td, rIdx), [',', '円']).trim();
+        if (!_prop) continue;
         // 支払い金が取得できた場合
-        line.money = parseInt(_money);
-        isWithdrawals = false;
+        line.money = parseInt(_prop);
       } else if (
         td.className.includes('transaction') ||
         td.className.includes('note')
       ) {
         // -- 取引内容／メモ --
-        const _prop = _getProp(td, rIdx, true).trim();
+        const _prop = _getText(td, rIdx, true).trim();
         if (!line.description && _prop) {
           // 取引内容
           line.description = _prop;
@@ -184,17 +204,17 @@ const parseWithdrawal = (html: string, user: AccountInfo): WithdrawalInfo[] => {
 
 /**
  * ログアウト
- * @param _driver WebDriver
+ * @param driver WebDriver
  */
-const logout = async (_driver: WebDriver): Promise<void> => {
-  await _driver
+const logout = async (driver: WebDriver): Promise<void> => {
+  await driver
     .findElement(By.css('#header > div.utilities > ul > li.logout > a'))
     .click();
 };
 
 /**
  * 出金情報をダウンロードする
- * @param conf アカウント情報
+ * @param user アカウント情報
  */
 export default async function getWithdrawal(
   user: AccountInfo
@@ -212,24 +232,24 @@ export default async function getWithdrawal(
     });
 
     /* ++ UFJトップ画面 >> ログイン画面 ++ */
-    writeLog('　画面遷移中.. UFJトップ画面 >> ログイン画面');
+    leaveLog('　画面遷移中.. UFJトップ画面 >> ログイン画面');
     await transFromTopToLogin(driver);
 
     /* ++ ログイン画面 >> 個人用のトップ画面 ++ */
-    writeLog('　画面遷移中.. ログイン画面 >> 個人用のトップ画面');
+    leaveLog('　画面遷移中.. ログイン画面 >> 個人用のトップ画面');
     await transFromLoginToIndiv(driver, user);
 
     /* ++ 個人のトップ画面 >> 入出金明細画面 ++ */
-    writeLog('　画面遷移中.. 個人用のトップ画面 >> 入出金明細画面');
+    leaveLog('　画面遷移中.. 個人用のトップ画面 >> 入出金明細画面');
     await transFromIndivToDetails(driver);
 
     // htmlの取得
-    writeLog('　htmlの取得中..');
-    const html = await getJson(driver);
+    leaveLog('　htmlの取得中..');
+    const html = await getHtml(driver);
 
     // 出金明細のjson化
-    writeLog('　出金明細のjson変換中..');
-    const json = parseWithdrawal(html, user);
+    leaveLog('　出金明細のjson変換中..');
+    const json = getJson(html, user);
 
     // jsonの書込み
     const fileName = `${user.name}_${moment().format('YYYYMMDD-HHmm')}.json`;
@@ -248,10 +268,12 @@ export default async function getWithdrawal(
   } catch (err) {
     // ログに残す
     console.log(err);
-    writeLog(err);
+    leaveLog(err);
+
     // エラー発生時は空文字を返す
     return '';
   } finally {
+    // seleniumを停止する
     driver.quit();
   }
 }
