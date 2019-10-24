@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import fs from 'fs';
 import { AccountInfo, InitialData } from './helper/types'; // 型情報
 import download from './downloader'; // csvダウンロード
 
-// コンソール及び、ログを残す
+// コンソール及び、ログに残す
 import leaveLog from './helper/trailer';
 
 // Promiseのエラーがcatchされなかった場合
@@ -34,6 +32,11 @@ const conf: InitialData = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
     async (x: AccountInfo): Promise<string> => download(x)
   );
   const result = await Promise.all(files);
-  // +++ テスト中 +++
-  leaveLog('メイン処理が完了しました >> ' + result);
+
+  // ハイフンが含まれていた場合、異常終了する
+  if (result.filter((x: string): boolean => x === '-').length > 0)
+    process.exit(1);
+
+  // 処理終了
+  leaveLog('メイン処理が完了しました >> ' + result.join('-'));
 })();

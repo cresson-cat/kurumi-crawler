@@ -81,7 +81,7 @@ const transFromIndivToDetails = async (driver: WebDriver): Promise<void> => {
 };
 
 /**
- * 入出金明細にてJson取得
+ * 入出金明細にてhtml取得
  * @param driver WebDriver
  */
 const getHtml = async (driver: WebDriver): Promise<string> => {
@@ -125,13 +125,13 @@ const getJson = (html: string, user: AccountInfo): WithdrawalInfo[] => {
 
   // tdのテキストを取得
   const _getText = (
-    _cell: HTMLTableDataCellElement,
+    cell: HTMLTableDataCellElement,
     rIdx: number,
     isNullable = false
   ): string => {
-    if (!_cell.textContent && !isNullable)
-      throw new Error(`${rIdx} 行目 ${_cell.className} の値が取得できません`);
-    return _cell.textContent || '';
+    if (!cell.textContent && !isNullable)
+      throw new Error(`${rIdx} 行目 ${cell.className} の値が取得できません`);
+    return cell.textContent || '';
   };
   // 文字列を複数回削除する
   const _removeStr = (str: string, substrs: string[]): string => {
@@ -176,22 +176,22 @@ const getJson = (html: string, user: AccountInfo): WithdrawalInfo[] => {
       } else if (td.className.includes('manage') && isWithdrawals) {
         // -- 支払い金額 --
         isWithdrawals = false; // フラグを落とす
-        const _prop = _removeStr(_getText(td, rIdx), [',', '円']).trim();
-        if (!_prop) continue;
+        const _txt = _removeStr(_getText(td, rIdx), [',', '円']).trim();
+        if (!_txt) continue;
         // 支払い金が取得できた場合
-        line.money = parseInt(_prop);
+        line.money = parseInt(_txt);
       } else if (
         td.className.includes('transaction') ||
         td.className.includes('note')
       ) {
         // -- 取引内容／メモ --
-        const _prop = _getText(td, rIdx, true).trim();
-        if (!line.description && _prop) {
+        const _txt = _getText(td, rIdx, true).trim();
+        if (!line.description && _txt) {
           // 取引内容
-          line.description = _prop;
-        } else if (line.description && _prop) {
+          line.description = _txt;
+        } else if (line.description && _txt) {
           // メモ
-          line.description += `：${_prop}`;
+          line.description += `：${_txt}`;
         }
       }
     }
@@ -270,8 +270,8 @@ export default async function getWithdrawal(
     console.log(err);
     leaveLog(err);
 
-    // エラー発生時は空文字を返す
-    return '';
+    // エラー発生時は、空文字を返す
+    return '-';
   } finally {
     // seleniumを停止する
     driver.quit();

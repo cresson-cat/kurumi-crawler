@@ -1,7 +1,7 @@
 /**
  * 簡易ログ
  */
-export type Logger = (message: string) => void;
+export type SimpleLog = (message: string) => void;
 
 /**
  * アカウント情報

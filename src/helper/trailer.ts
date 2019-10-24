@@ -1,7 +1,7 @@
-import { Logger } from './types';
+import { SimpleLog } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const writeLog: Logger = require('./logger');
+const writeLog: SimpleLog = require('./logger');
 
 // メッセージを受け取るが、何も返さない
 type RetNothing = (msg: string) => void;
@@ -9,9 +9,9 @@ type RetNothing = (msg: string) => void;
 /**
  * コンソール及びログにメッセージを出力する
  */
-export default ((logger: Logger): RetNothing => {
+export default ((log: SimpleLog): RetNothing => {
   return (message: string): void => {
     console.log(message);
-    logger(message);
+    log(message);
   };
 })(writeLog);
