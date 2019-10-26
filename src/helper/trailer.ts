@@ -10,8 +10,8 @@ type RetNothing = (msg: string) => void;
  * コンソール及びログにメッセージを出力する
  */
 export default ((log: SimpleLog): RetNothing => {
-  return (message: string): void => {
-    console.log(message);
-    log(message);
+  return (msg: string): void => {
+    console.log(msg);
+    log(msg);
   };
 })(writeLog);

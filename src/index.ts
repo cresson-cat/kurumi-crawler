@@ -9,7 +9,7 @@ import leaveLog from './helper/trailer';
 process.on('unhandledRejection', (reason: unknown): void => {
   if (typeof reason === 'string') {
     leaveLog(`${reason}`); // ログに残しておく
-    console.log(`${reason}`);
+    process.exitCode = 1;
   }
 });
 
