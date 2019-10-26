@@ -21,7 +21,7 @@ import leaveLog from './helper/trailer';
 const writeFile = promisify(fs.writeFile);
 
 //#region chromeの設定
-// 試行錯誤その１
+// 検討その１
 /*
 const capabilities = {
   browserName: 'chrome',
@@ -33,7 +33,7 @@ const capabilities = {
 };
 */
 
-// 試行錯誤その２
+// 検討その２
 /*
 const capabilities = Capabilities.chrome();
 capabilities.set('chromeOptions', {
