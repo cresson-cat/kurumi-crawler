@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { AccountInfo, InitialData } from './helper/types'; // 型情報
+import { InitialData } from './helper/types'; // 型情報
 import download from './downloader'; // csvダウンロード
 
 // コンソール及び、ログに残す
@@ -27,6 +27,15 @@ leaveLog('メイン処理を開始します');
 const conf: InitialData = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
 
 (async (): Promise<void> => {
+  /* 非同期に処理した場合、最初の`quit`で`selenium`が完全に停止してしまったため、
+   * 一旦直列に処理しておく。いずれ解決する */
+  for (let user of conf.users) {
+    const name = await download(user);
+    if (name === '-') process.exit(1);
+  }
+
+  //#region 並列版..
+  /*
   // 出金明細のjsonのパスを取得する
   const files = conf.users.map(
     async (x: AccountInfo): Promise<string> => download(x)
@@ -36,7 +45,9 @@ const conf: InitialData = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
   // ハイフンが含まれていた場合、異常終了する
   if (result.filter((x: string): boolean => x === '-').length > 0)
     process.exit(1);
+  // */
+  //#endregion
 
   // 処理終了
-  leaveLog('メイン処理が完了しました >> ' + result.join('-'));
+  leaveLog('メイン処理が完了しました');
 })();

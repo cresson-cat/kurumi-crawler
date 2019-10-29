@@ -273,7 +273,17 @@ export default async function getWithdrawal(
     // エラー発生時は、空文字を返す
     return '-';
   } finally {
-    // seleniumを停止する
-    driver.quit();
+    await driver.quit();
+    //#region 順次閉じる
+    /*
+    const handles = await driver.getAllWindowHandles();
+    handles.forEach(
+      async (x: string): Promise<void> => {
+        await driver.switchTo().window(x);
+        driver.close();
+      }
+    );
+    //*/
+    //#endregion
   }
 }
