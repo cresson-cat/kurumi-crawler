@@ -27,8 +27,7 @@ leaveLog('メイン処理を開始します');
 const conf: InitialData = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
 
 (async (): Promise<void> => {
-  /* 非同期に処理した場合、最初の`quit`で`selenium`が完全に停止してしまったため、
-   * 一旦直列に処理しておく。いずれ解決する */
+  /* 一旦直列に処理しとく。（ロガーを並列対応したのち）非同期に変更 */
   for (let user of conf.users) {
     const name = await download(user);
     if (name === '-') process.exit(1);

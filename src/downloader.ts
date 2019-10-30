@@ -232,23 +232,25 @@ export default async function getWithdrawal(
     });
 
     /* ++ UFJトップ画面 >> ログイン画面 ++ */
-    leaveLog('　画面遷移中.. UFJトップ画面 >> ログイン画面');
+    leaveLog(`　${user.name}：画面遷移中.. トップ画面 >> ログイン画面`);
     await transFromTopToLogin(driver);
 
     /* ++ ログイン画面 >> 個人用のトップ画面 ++ */
-    leaveLog('　画面遷移中.. ログイン画面 >> 個人用のトップ画面');
+    leaveLog(`　${user.name}：画面遷移中.. ログイン画面 >> 個人用のトップ画面`);
     await transFromLoginToIndiv(driver, user);
 
     /* ++ 個人のトップ画面 >> 入出金明細画面 ++ */
-    leaveLog('　画面遷移中.. 個人用のトップ画面 >> 入出金明細画面');
+    leaveLog(
+      `　${user.name}：画面遷移中.. 個人用のトップ画面 >> 入出金明細画面`
+    );
     await transFromIndivToDetails(driver);
 
     // htmlの取得
-    leaveLog('　htmlの取得中..');
+    leaveLog(`　${user.name}：htmlの取得中..`);
     const html = await getHtml(driver);
 
     // 出金明細のjson化
-    leaveLog('　出金明細のjson変換中..');
+    leaveLog(`　${user.name}：出金明細のjson変換中..`);
     const json = getJson(html, user);
 
     // jsonの書込み
