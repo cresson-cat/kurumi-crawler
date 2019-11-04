@@ -11,10 +11,8 @@ import {
 import { JSDOM } from 'jsdom';
 import moment from 'moment';
 
-// 型情報
+// 自作のモジュール
 import { AccountInfo, WithdrawalInfo } from './helper/types';
-
-// コンソール及び、ログを残す
 import logBuilder from './helper/trailer';
 
 // 標準モジュールをPromise化しとく

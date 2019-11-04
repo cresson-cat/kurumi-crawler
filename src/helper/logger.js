@@ -15,12 +15,12 @@ const appendFile = promisify(fs.appendFile);
  * @description `app.log`または`<プリフィックス>_<YYYYMMDD>.log`の形式でログ出力する
  */
 module.exports = (prefix, message) => {
-  let name = prefix
+  let fileName = prefix
     ? `${prefix}_${moment().format('YYYYMMDD')}.log`
     : 'app.log';
   let appendLog = () =>
     appendFile(
-      `./logs/${name}`,
+      `./logs/${fileName}`,
       moment().format('YYYY/MM/DD HH:mm:ss') + ' ' + message + '\n'
     );
   // （node.jsの流儀に従い）フォルダの存在チェックはしない
