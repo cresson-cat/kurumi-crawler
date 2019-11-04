@@ -1,7 +1,8 @@
 /**
  * 簡易ログ
+ * @description `trailer.ts`でしか使わない
  */
-export type SimpleLog = (message: string) => void;
+export type SimpleLog = (prefix: string, message: string) => void;
 
 /**
  * アカウント情報

@@ -15,7 +15,7 @@ import moment from 'moment';
 import { AccountInfo, WithdrawalInfo } from './helper/types';
 
 // コンソール及び、ログを残す
-import leaveLog from './helper/trailer';
+import logBuilder from './helper/trailer';
 
 // 標準モジュールをPromise化しとく
 const writeFile = promisify(fs.writeFile);
@@ -223,6 +223,9 @@ export default async function getWithdrawal(
     .forBrowser('chrome') // .withCapabilities(capabilities)
     .build();
 
+  // ログ出力の準備
+  const leaveLog = logBuilder(user.name);
+
   try {
     // webdriverで、要素が生成されるまで一律30秒待機
     await driver.manage().setTimeouts({
@@ -275,17 +278,7 @@ export default async function getWithdrawal(
     // エラー発生時は、空文字を返す
     return '-';
   } finally {
+    // `quit`は一度しか呼べない。追々並列で呼べるように変更
     await driver.quit();
-    //#region 順次閉じる
-    /*
-    const handles = await driver.getAllWindowHandles();
-    handles.forEach(
-      async (x: string): Promise<void> => {
-        await driver.switchTo().window(x);
-        driver.close();
-      }
-    );
-    //*/
-    //#endregion
   }
 }

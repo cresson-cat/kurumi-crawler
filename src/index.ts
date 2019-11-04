@@ -3,7 +3,8 @@ import { InitialData } from './helper/types'; // 型情報
 import download from './downloader'; // csvダウンロード
 
 // コンソール及び、ログに残す
-import leaveLog from './helper/trailer';
+import logBuilder from './helper/trailer';
+const leaveLog = logBuilder(); // メイン処理では`app.log`に書き込む
 
 // Promiseのエラーがcatchされなかった場合
 process.on('unhandledRejection', (reason: unknown): void => {
@@ -27,10 +28,15 @@ leaveLog('メイン処理を開始します');
 const conf: InitialData = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
 
 (async (): Promise<void> => {
-  /* 一旦直列に処理しとく。（ロガーを並列対応したのち）非同期に変更 */
+  // 一旦直列に処理しとく。いずれ非同期に変更
   for (let user of conf.users) {
     const name = await download(user);
-    if (name === '-') process.exit(1);
+    if (name === '-') {
+      leaveLog(
+        `${user.name} の処理に失敗しました。詳細は個別ログを確認してください。`
+      );
+      process.exit(1);
+    }
   }
 
   //#region 並列版..
