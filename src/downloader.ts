@@ -18,8 +18,7 @@ import logBuilder from './helper/trailer';
 // 標準モジュールをPromise化しとく
 const writeFile = promisify(fs.writeFile);
 
-//#region chromeの設定
-// 検討その１
+//#region chromeの設定 >> firefoxにするかも
 /*
 const capabilities = {
   browserName: 'chrome',
@@ -31,7 +30,6 @@ const capabilities = {
 };
 */
 
-// 検討その２
 /*
 const capabilities = Capabilities.chrome();
 capabilities.set('chromeOptions', {
@@ -47,7 +45,9 @@ capabilities.set('chromeOptions', {
 const transFromTopToLogin = async (driver: WebDriver): Promise<void> => {
   // トップ画面
   await driver.get('https://direct.bk.mufg.jp/');
-  await driver.findElement(By.id('lnav_direct_login')).click();
+  const elem = await driver.findElements(By.id('lnav_direct_login'));
+  // なぜか、1html内に同一のidが振られているので、2件めをクリック
+  await elem[1].click();
   // ログイン画面（新規タブ）に切り替え
   const handles = await driver.getAllWindowHandles();
   await driver.switchTo().window(handles[handles.length - 1]);
@@ -75,7 +75,13 @@ const transFromLoginToIndiv = async (
  * @param driver WebDriver
  */
 const transFromIndivToDetails = async (driver: WebDriver): Promise<void> => {
-  await driver.findElement(By.css('#list > li:nth-child(2) > a')).click();
+  await driver
+    .findElement(
+      By.xpath(
+        '/html/body/div/main/form/section/div/div[1]/div/div[2]/section[1]/a'
+      )
+    )
+    .click();
 };
 
 /**
@@ -227,9 +233,9 @@ export default async function getWithdrawal(
   try {
     // webdriverで、要素が生成されるまで一律30秒待機
     await driver.manage().setTimeouts({
-      implicit: 30000,
-      pageLoad: 30000,
-      script: 30000,
+      implicit: 300000,
+      pageLoad: 300000,
+      script: 300000,
     });
 
     /* ++ UFJトップ画面 >> ログイン画面 ++ */
@@ -270,9 +276,7 @@ export default async function getWithdrawal(
     return fileName;
   } catch (err) {
     // ログに残す
-    console.log(err);
     leaveLog(err);
-
     // エラー発生時は、空文字を返す
     return '-';
   } finally {
