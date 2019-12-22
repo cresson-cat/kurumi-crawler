@@ -143,7 +143,9 @@ const getJson = (html: string, user: AccountType): WithdrawalInfo[] => {
   };
   // 年月日を`YYYYMMDD`形式に整形する
   const _formatYMD = (txt: string): string => {
-    const parts = txt.split(/[年月日]/);
+    const parts = txt.split(/年|月|日/, 3);
+    // 年月日を持たない場合は、そのまま返す
+    if (parts.length < 3) return txt;
     parts[1] = parts[1].padStart(2, '0');
     parts[2] = parts[2].padStart(2, '0');
     return parts.join('');
