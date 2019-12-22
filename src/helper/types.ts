@@ -5,22 +5,6 @@
 export type SimpleLog = (prefix: string, message: string) => void;
 
 /**
- * アカウント情報
- */
-export interface AccountInfo {
-  name: string;
-  account: string;
-  password: string;
-}
-
-/**
- * 初期化データ
- */
-export interface InitialData {
-  users: AccountInfo[];
-}
-
-/**
  * Apiに渡す型。出金明細
  */
 export interface WithdrawalInfo {
@@ -30,3 +14,8 @@ export interface WithdrawalInfo {
   money: number;
   description?: string;
 }
+
+/**
+ * 配列を構成する個々の型を抽出（Union Types）
+ */
+export type TupleToUnion<T> = T extends (infer I)[] ? I : never;

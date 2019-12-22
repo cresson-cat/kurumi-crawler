@@ -11,7 +11,8 @@
     ],
     "allowJs": true, // javascriptもコンパイル対象にし、distに移動する
     "checkJs": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "resolveJsonModule": true // jsonファイルの型抽出
   },
   "include": [
     "src/**/*"

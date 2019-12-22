@@ -12,8 +12,12 @@ import { JSDOM } from 'jsdom';
 import moment from 'moment';
 
 // 自作のモジュール
-import { AccountInfo, WithdrawalInfo } from './helper/types';
+import { WithdrawalInfo, TupleToUnion } from './helper/types';
 import logBuilder from './helper/trailer';
+
+// `users`の個々の型を取得
+type Accounts_ = (typeof import('../init.json'))['users'];
+type AccountType = TupleToUnion<Accounts_>;
 
 // 標準モジュールをPromise化しとく
 const writeFile = promisify(fs.writeFile);
@@ -60,7 +64,7 @@ const transFromTopToLogin = async (driver: WebDriver): Promise<void> => {
  */
 const transFromLoginToIndiv = async (
   driver: WebDriver,
-  user: AccountInfo
+  user: AccountType
 ): Promise<void> => {
   await driver.findElement(By.id('account_id')).sendKeys(user.account);
   await driver.findElement(By.id('ib_password')).sendKeys(user.password);
@@ -121,7 +125,7 @@ const getHtml = async (driver: WebDriver): Promise<string> => {
  * @param html 分析対象のhtml
  * @param user アカウント情報
  */
-const getJson = (html: string, user: AccountInfo): WithdrawalInfo[] => {
+const getJson = (html: string, user: AccountType): WithdrawalInfo[] => {
   let result: WithdrawalInfo[] = [];
   const dom = new JSDOM(html);
 
@@ -221,7 +225,7 @@ const logout = async (driver: WebDriver): Promise<void> => {
  * @param user アカウント情報
  */
 export default async function getWithdrawal(
-  user: AccountInfo
+  user: AccountType
 ): Promise<string> {
   const driver = await new Builder()
     .forBrowser('chrome') // .withCapabilities(capabilities)
