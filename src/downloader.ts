@@ -141,6 +141,13 @@ const getJson = (html: string, user: AccountType): WithdrawalInfo[] => {
       throw new Error(`${rIdx} 行目 ${cell.className} の値が取得できません`);
     return cell.textContent || '';
   };
+  // 年月日を`YYYYMMDD`形式に整形する
+  const _formatYMD = (txt: string): string => {
+    const parts = txt.split(/[年月日]/);
+    parts[1] = parts[1].padStart(2, '0');
+    parts[2] = parts[2].padStart(2, '0');
+    return parts.join('');
+  };
   // 文字列を複数回削除する
   const _removeStr = (str: string, substrs: string[]): string => {
     let result = str;
@@ -178,9 +185,7 @@ const getJson = (html: string, user: AccountType): WithdrawalInfo[] => {
     for (const td of tr.cells) {
       if (td.className.includes('date')) {
         // -- 日付 --
-        line.date = parseInt(
-          _removeStr(_getText(td, rIdx), ['年', '月', '日'])
-        );
+        line.date = parseInt(_formatYMD(_getText(td, rIdx)));
       } else if (td.className.includes('manage') && isWithdrawals) {
         // -- 支払い金額 --
         isWithdrawals = false; // フラグを落とす
