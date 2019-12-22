@@ -1,5 +1,4 @@
 import fs from 'fs';
-// import { InitialData } from './helper/types'; // 型情報
 import download from './downloader'; // csvダウンロード
 
 // コンソール及び、ログに残す
@@ -25,8 +24,8 @@ leaveLog('----------');
 leaveLog('メイン処理を開始します');
 
 // init.jsonを読み込む
-type InitData = typeof import('../init.json'); // 型を取得
-const conf: InitData = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
+type CnfFileType = typeof import('../init.json'); // 型を取得
+const conf: CnfFileType = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
 
 (async (): Promise<void> => {
   // 一旦直列に処理しとく。いずれ非同期に変更
