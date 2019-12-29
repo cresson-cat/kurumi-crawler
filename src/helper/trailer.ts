@@ -1,3 +1,4 @@
+import { curry } from 'ramda';
 import { SimpleLog } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -6,14 +7,17 @@ const baseLog: SimpleLog = require('./logger');
 // ログの型
 type LogCurry = (msg: string) => void;
 
-// JSのロガーをラップする（簡易的なカリー化）
-const func = ((writeLog: SimpleLog): ((prefix?: string) => LogCurry) => {
-  return (prfx?: string): LogCurry => {
-    return (msg: string): void => {
-      console.log(msg);
-      writeLog(prfx || '', msg);
-    };
+// ロガー << カリー化予定
+const _func = (writeLog: SimpleLog, prefix: string): LogCurry => {
+  return (msg: string): void => {
+    console.log(msg);
+    writeLog(prefix || '', msg);
   };
-})(baseLog);
+};
 
-export default func;
+// カリー化
+const curried = curry(_func);
+
+/* 1. プリフィックスを受け付ける
+ * 2. メッセージを出力 */
+export default curried(baseLog);

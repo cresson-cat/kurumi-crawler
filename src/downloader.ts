@@ -3,11 +3,7 @@ import fs from 'fs';
 import { promisify } from 'util';
 
 // npmパッケージ
-import {
-  Builder,
-  By,
-  WebDriver /* , Capabilities */,
-} from 'selenium-webdriver';
+import { Builder, By, WebDriver, Capabilities } from 'selenium-webdriver';
 import { JSDOM } from 'jsdom';
 import moment from 'moment';
 
@@ -16,31 +12,17 @@ import { WithdrawalInfo, TupleToUnion } from './helper/types';
 import logBuilder from './helper/trailer';
 
 // `users`の個々の型を取得
-type Accounts_ = (typeof import('../init.json'))['users'];
-type AccountType = TupleToUnion<Accounts_>;
+type Accounts = (typeof import('../init.json'))['users'];
+type AccountType = TupleToUnion<Accounts>;
 
 // 標準モジュールをPromise化しとく
 const writeFile = promisify(fs.writeFile);
 
-//#region chromeの設定 >> firefoxにするかも
-/*
-const capabilities = {
-  browserName: 'chrome',
-  chromeOptions: {
-    prefs: {
-      'download.default_directory': __dirname + '/../csv/',
-    },
-  },
-};
-*/
-
-/*
+// headlessモードにする
 const capabilities = Capabilities.chrome();
-capabilities.set('chromeOptions', {
+capabilities.set('goog:chromeOptions', {
   args: ['--headless'],
 });
-*/
-//#endregion
 
 /**
  * USJのトップ画面からログイン画面へ遷移
@@ -104,20 +86,6 @@ const getHtml = async (driver: WebDriver): Promise<string> => {
 
   // htmlを返す
   return driver.getPageSource();
-  //#region CSVダウンロード。ダウンロード先を制御出来なかったのでコメント化
-  /*
-  await driver
-    .findElement(
-      By.css(
-        '#contents > div.yen_6_2_1 > div:nth-child(2) > div.data_footer > table > tbody > tr > td.first_child > a'
-      )
-    )
-    .click();
-  await driver
-    .findElement(By.css('#contents > div.buttons > div.admb_l > button'))
-    .click();
-  */
-  //#endregion
 };
 
 /**
@@ -170,14 +138,18 @@ const getJson = (html: string, user: AccountType): WithdrawalInfo[] => {
     throw new Error(
       '出金明細が取得できません。html構造が変更された可能性があります'
     );
+  // 変数群
+  let currDate: number;
+  let pastDate = 0;
+  let bnum = 0; // 枝番
   // tbodyをparse
-  for (let rIdx = 0; rIdx < content.rows.length; rIdx++) {
-    let tr = content.rows[rIdx];
+  for (let rI = 0; rI < content.rows.length; rI++) {
+    let tr = content.rows[rI];
     // 各行の初期データ
     let line: WithdrawalInfo = {
       name: user.name,
       date: 0,
-      branch: rIdx,
+      branch: 0,
       money: 0,
       description: '',
     };
@@ -187,11 +159,18 @@ const getJson = (html: string, user: AccountType): WithdrawalInfo[] => {
     for (const td of tr.cells) {
       if (td.className.includes('date')) {
         // -- 日付 --
-        line.date = parseInt(_formatYMD(_getText(td, rIdx)));
+        currDate = parseInt(_formatYMD(_getText(td, rI)));
+        // 同一の日付の場合はインクリメント
+        bnum = pastDate === currDate ? ++bnum : (bnum = 0);
+        // 現在日付を退避
+        if (pastDate !== currDate) pastDate = currDate;
+        // 日付と連番を設定
+        line.date = currDate;
+        line.branch = bnum;
       } else if (td.className.includes('manage') && isWithdrawals) {
         // -- 支払い金額 --
         isWithdrawals = false; // フラグを落とす
-        const _txt = _removeStr(_getText(td, rIdx), [',', '円']).trim();
+        const _txt = _removeStr(_getText(td, rI), [',', '円']).trim();
         if (!_txt) continue;
         // 支払い金が取得できた場合
         line.money = parseInt(_txt);
@@ -200,7 +179,7 @@ const getJson = (html: string, user: AccountType): WithdrawalInfo[] => {
         td.className.includes('note')
       ) {
         // -- 取引内容／メモ --
-        const _txt = _getText(td, rIdx, true).trim();
+        const _txt = _getText(td, rI, true).trim();
         if (!line.description && _txt) {
           // 取引内容
           line.description = _txt;
@@ -235,7 +214,8 @@ export default async function getWithdrawal(
   user: AccountType
 ): Promise<string> {
   const driver = await new Builder()
-    .forBrowser('chrome') // .withCapabilities(capabilities)
+    .withCapabilities(capabilities)
+    .forBrowser('chrome')
     .build();
 
   // ログ出力の準備
@@ -250,25 +230,23 @@ export default async function getWithdrawal(
     });
 
     /* ++ UFJトップ画面 >> ログイン画面 ++ */
-    leaveLog(`　${user.name}：画面遷移中.. トップ画面 >> ログイン画面`);
+    leaveLog(`${user.name}：画面遷移中.. トップ画面 >> ログイン画面`);
     await transFromTopToLogin(driver);
 
     /* ++ ログイン画面 >> 個人用のトップ画面 ++ */
-    leaveLog(`　${user.name}：画面遷移中.. ログイン画面 >> 個人用のトップ画面`);
+    leaveLog(`${user.name}：画面遷移中.. ログイン画面 >> 個人用のトップ画面`);
     await transFromLoginToIndiv(driver, user);
 
     /* ++ 個人のトップ画面 >> 入出金明細画面 ++ */
-    leaveLog(
-      `　${user.name}：画面遷移中.. 個人用のトップ画面 >> 入出金明細画面`
-    );
+    leaveLog(`${user.name}：画面遷移中.. 個人用のトップ画面 >> 入出金明細画面`);
     await transFromIndivToDetails(driver);
 
     // htmlの取得
-    leaveLog(`　${user.name}：htmlの取得中..`);
+    leaveLog(`${user.name}：htmlの取得中..`);
     const html = await getHtml(driver);
 
     // 出金明細のjson化
-    leaveLog(`　${user.name}：出金明細のjson変換中..`);
+    leaveLog(`${user.name}：出金明細のjson変換中..`);
     const json = getJson(html, user);
 
     // jsonの書込み
