@@ -3,7 +3,7 @@ import download from './downloader'; // csvダウンロード
 
 // コンソール及び、ログに残す
 import logBuilder from './helper/trailer';
-const leaveLog = logBuilder(); // メイン処理では`app.log`に書き込む
+const leaveLog = logBuilder(''); // メイン処理では`app.log`に書き込む
 
 // Promiseのエラーがcatchされなかった場合
 process.on('unhandledRejection', (reason: unknown): void => {

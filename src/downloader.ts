@@ -31,9 +31,13 @@ capabilities.set('goog:chromeOptions', {
 const transFromTopToLogin = async (driver: WebDriver): Promise<void> => {
   // トップ画面
   await driver.get('https://direct.bk.mufg.jp/');
-  const elem = await driver.findElements(By.id('lnav_direct_login'));
-  // なぜか、1html内に同一のidが振られているので、2件めをクリック
-  await elem[1].click();
+  // htmlの構造的にseleniumからクリック出来ない。javascriptを使う
+  const _func = (selector: string): void => {
+    // なぜか、1html内に同一のidが振られているので、2件めをクリック
+    let button = document.querySelectorAll(selector)[1] as HTMLElement;
+    button.click();
+  };
+  await driver.executeScript(_func, '#lnav_direct_login');
   // ログイン画面（新規タブ）に切り替え
   const handles = await driver.getAllWindowHandles();
   await driver.switchTo().window(handles[handles.length - 1]);

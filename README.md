@@ -10,6 +10,7 @@
       - <https://www.webprofessional.jp/functional-programming-with-ramda/>
       - <https://qiita.com/41semicolon/items/5e5b61c5d649ecc4b289>
    1. リファクタリング
+1. JA / --
 
 ## メモ
 

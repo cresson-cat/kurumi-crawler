@@ -1,23 +1,22 @@
-import { curry } from 'ramda';
 import { SimpleLog } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const baseLog: SimpleLog = require('./logger');
 
-// ログの型
-type LogCurry = (msg: string) => void;
+// カリー化途中の型
+type Curry1st = (prefix: string) => (message: string) => void;
+type Curry2nd = (message: string) => void;
 
-// ロガー << カリー化予定
-const _func = (writeLog: SimpleLog, prefix: string): LogCurry => {
-  return (msg: string): void => {
-    console.log(msg);
-    writeLog(prefix || '', msg);
-  };
+// ロガー
+const _func = (writeLog: SimpleLog): Curry1st => (prefix: string): Curry2nd => (
+  message: string
+): void => {
+  console.log(message);
+  writeLog(prefix, message);
 };
 
-// カリー化
-const curried = curry(_func);
-
-/* 1. プリフィックスを受け付ける
- * 2. メッセージを出力 */
-export default curried(baseLog);
+/* カリー化された関数（以下）を順番に返す
+ * -----
+ * 1. ログファイル名を設定する関数
+ * 2. ログにメッセージを出力する関数 */
+export default _func(baseLog);
