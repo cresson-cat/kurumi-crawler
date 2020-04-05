@@ -52,11 +52,15 @@ const transFromLoginToIndiv = async (
   driver: WebDriver,
   user: AccountType
 ): Promise<void> => {
-  await driver.findElement(By.id('account_id')).sendKeys(user.account);
-  await driver.findElement(By.id('ib_password')).sendKeys(user.password);
+  await driver.findElement(By.id('tx-contract-number')).sendKeys(user.account);
+  await driver.findElement(By.id('tx-ib-password')).sendKeys(user.password);
   // ログインボタン押下
   await driver
-    .findElement(By.css('#login_frame > div > div > div.acenter.admb_m > a'))
+    .findElement(
+      By.css(
+        'body > div.body-wrap > main > form > section > div > div > div.form-area-form > div.bottom-nav > div > button'
+      )
+    )
     .click();
 };
 
@@ -80,7 +84,7 @@ const transFromIndivToDetails = async (driver: WebDriver): Promise<void> => {
  */
 const getHtml = async (driver: WebDriver): Promise<string> => {
   // 直近10日
-  await driver.findElement(By.id('day_ten')).click();
+  // await driver.findElement(By.id('day_ten')).click();
   // 照会
   await driver
     .findElement(
