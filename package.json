@@ -13,10 +13,7 @@
     "▽▽▽ Jest ▽▽▽": "",
     "test": "jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/D-A-I/kurumi-crawler.git"
-  },
+  "repository": "git+https://github.com/D-A-I/kurumi-crawler.git",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -25,28 +22,28 @@
   },
   "homepage": "https://github.com/D-A-I/kurumi-crawler#readme",
   "dependencies": {
-    "@types/jsdom": "^12.2.4",
-    "@types/selenium-webdriver": "^4.0.3",
-    "jsdom": "^15.2.0",
-    "ramda": "^0.26.1",
-    "selenium-webdriver": "^4.0.0-alpha.5",
-    "typescript": "^3.5.2"
+    "@types/jsdom": "^16.2.5",
+    "@types/selenium-webdriver": "^4.0.10",
+    "jsdom": "^16.4.0",
+    "ramda": "^0.27.1",
+    "selenium-webdriver": "^4.0.0-alpha.8",
+    "typescript": "^4.1.3"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.15",
-    "@types/node": "^12.0.8",
-    "@types/ramda": "^0.26.39",
-    "@typescript-eslint/eslint-plugin": "^1.3.0",
-    "@typescript-eslint/parser": "^1.3.0",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^5.0.0",
-    "eslint-plugin-prettier": "^3.0.1",
-    "jest": "^24.8.0",
-    "moment": "^2.24.0",
-    "prettier": "^1.16.4",
-    "rimraf": "^2.6.3",
-    "ts-jest": "^24.0.2",
-    "ts-node": "^8.3.0",
-    "ts-node-dev": "^1.0.0-pre.40"
+    "@types/jest": "^26.0.19",
+    "@types/node": "^14.14.13",
+    "@types/ramda": "^0.27.33",
+    "@typescript-eslint/eslint-plugin": "^4.9.1",
+    "@typescript-eslint/parser": "^4.9.1",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-prettier": "^3.2.0",
+    "jest": "^26.6.3",
+    "moment": "^2.29.1",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.1.1",
+    "ts-node-dev": "^1.1.1"
   }
 }
