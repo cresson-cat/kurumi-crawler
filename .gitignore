@@ -67,8 +67,8 @@ dist/
 json/
 
 # 設定ファイルは不要
-init.json
-init.yaml
+init*.json
+init*.yaml
 
 # selenium-webdriver
 chromedriver
