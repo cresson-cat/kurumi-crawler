@@ -8,10 +8,11 @@
       "type": "node",
       "request": "launch",
       "name": "プログラムの起動",
-      "program": "${workspaceFolder}/dist/src/index.js",
+      "program": "${workspaceFolder}/dist/main.js",
       "outFiles": [
         "${workspaceFolder}/**/*.js"
-      ]
+      ],
+      "console": "integratedTerminal"
     }
   ]
 }
