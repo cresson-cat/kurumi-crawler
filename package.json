@@ -5,9 +5,10 @@
   "main": "./dist/index.js",
   "scripts": {
     "▽▽▽ ビルド ▽▽▽": "",
-    "build": "npm run clean & tsc",
+    "build": "npm run clean && webpack --config webpack.prod.js",
     "▽▽▽ ソースの変更を検知したら、随時ビルド ▽▽▽": "",
-    "watch": "npm run clean & tsc -w",
+    "watch": "npm run clean && webpack --config webpack.dev.js -w",
+    "old-watch": "npm run clean && tsc -w",
     "▽▽▽ rm -rf.. と同様 ▽▽▽": "",
     "clean": "rimraf dist/*",
     "▽▽▽ Jest ▽▽▽": "",
@@ -43,7 +44,9 @@
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.4.4",
-    "ts-node": "^9.1.1",
-    "ts-node-dev": "^1.1.1"
+    "ts-loader": "^8.0.12",
+    "webpack": "^5.11.0",
+    "webpack-cli": "^4.3.0",
+    "webpack-merge": "^5.7.3"
   }
 }
