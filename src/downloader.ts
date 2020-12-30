@@ -12,7 +12,7 @@ import { WithdrawalInfo, TupleToUnion } from './helper/types';
 import logBuilder from './helper/trailer';
 
 // `users`の個々の型を取得
-type Accounts = (typeof import('../init.json'))['users'];
+type Accounts = typeof import('../init.json')['users'];
 type AccountType = TupleToUnion<Accounts>;
 
 // 標準モジュールをPromise化しとく
@@ -21,7 +21,7 @@ const writeFile = promisify(fs.writeFile);
 // headlessモードにする
 const capabilities = Capabilities.chrome();
 capabilities.set('goog:chromeOptions', {
-  args: ['--headless'],
+  args: ['--headless', '--no-sandbox', '--disable-dev-shm-usage'],
 });
 
 /**
@@ -34,7 +34,7 @@ const transFromTopToLogin = async (driver: WebDriver): Promise<void> => {
   // htmlの構造的にseleniumからクリック出来ない。javascriptを使う
   const _func = (selector: string): void => {
     // なぜか、1html内に同一のidが振られているので、2件めをクリック
-    let button = document.querySelectorAll(selector)[1] as HTMLElement;
+    const button = document.querySelectorAll(selector)[1] as HTMLElement;
     button.click();
   };
   await driver.executeScript(_func, '#lnav_direct_login');
@@ -102,7 +102,7 @@ const getHtml = async (driver: WebDriver): Promise<string> => {
  * @param user アカウント情報
  */
 const getJson = (html: string, user: AccountType): WithdrawalInfo[] => {
-  let result: WithdrawalInfo[] = [];
+  const result: WithdrawalInfo[] = [];
   const dom = new JSDOM(html);
 
   /* +++ 小関数群 +++ */
@@ -152,9 +152,9 @@ const getJson = (html: string, user: AccountType): WithdrawalInfo[] => {
   let bnum = 0; // 枝番
   // tbodyをparse
   for (let rI = 0; rI < content.rows.length; rI++) {
-    let tr = content.rows[rI];
+    const tr = content.rows[rI];
     // 各行の初期データ
-    let line: WithdrawalInfo = {
+    const line: WithdrawalInfo = {
       name: user.name,
       date: 0,
       branch: 0,
