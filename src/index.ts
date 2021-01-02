@@ -29,7 +29,7 @@ const conf: CnfFileType = JSON.parse(fs.readFileSync('./init.json', 'utf8'));
 
 (async (): Promise<void> => {
   // 一旦直列に処理しとく。いずれ非同期に変更
-  for (let user of conf.users) {
+  for (const user of conf.users) {
     const name = await download(user);
     if (name === '-') {
       leaveLog(
