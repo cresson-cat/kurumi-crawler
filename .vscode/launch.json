@@ -12,6 +12,7 @@
       "outFiles": [
         "${workspaceFolder}/**/*.js"
       ],
+      "runtimeExecutable": "/Users/kanegadai/.nodebrew/current/bin/node",
       "console": "integratedTerminal"
     }
   ]
